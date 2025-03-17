@@ -29,7 +29,10 @@ setup(
             # espcam
             'pub_cam_raw = elegoo_src_ros2.espcam.pub_cam_raw:main',
             # arduino serial
-            'pub_arduino_serial = elegoo_src_ros2.serial.pub_serial:main'
+            'pub_serial_raw  = elegoo_src_ros2.serial.pub_serial_raw:main',
+            'pub_serial_filt = elegoo_src_ros2.serial.pub_serial_filt:main',
+            # misc
+            'image_view      = elegoo_src_ros2.misc.image_view:main',
         ],
     },
 )

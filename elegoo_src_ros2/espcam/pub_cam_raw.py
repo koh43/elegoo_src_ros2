@@ -8,7 +8,7 @@ def main(args=None):
     params = {
         'node_name'  : 'pub_espcam_raw',
         'queue_size' : 5,
-        'cam_ip'     : "192.168.1.103",
+        'cam_ip'     : "koh-esp32cam.local",
         'cam_port'   : 81,
         'frame_id'   : 'espcam',
         'fps'        : 30,

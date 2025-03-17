@@ -1,18 +1,19 @@
 import rclpy
 
-from nodes.serial import pub_serial
+from nodes.serial import pub_serial_raw
 
 def main(args=None):
     rclpy.init(args=args)
 
     params = {
         "node_name": "pub_arduino_serial",
-        "ns" : "/arduino/serial",
         "queue_size": 5,
-        "esp_ip": "192.168.1.103",
-        "max_hz": 1000
+        "udp_port": 9750,
+        "buffer_size": 256,
+        "max_hz": 150,
+        "num_calib_samples": 1000,
     }
-    app = pub_serial.PUB_SERIAL(params)
+    app = pub_serial_raw.PUB_SERIAL_RAW(params)
 
     rclpy.spin(app)
     app.destroy_node()
