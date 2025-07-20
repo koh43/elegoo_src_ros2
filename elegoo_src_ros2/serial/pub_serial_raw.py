@@ -6,11 +6,11 @@ def main(args=None):
     rclpy.init(args=args)
 
     params = {
-        "node_name": "pub_arduino_serial",
+        "node_name": "pub_serial_raw",
         "queue_size": 5,
         "udp_port": 9750,
-        "buffer_size": 256,
-        "max_hz": 150,
+        "buffer_size": 128,
+        "max_hz": 200,
         "num_calib_samples": 1000,
     }
     app = pub_serial_raw.PUB_SERIAL_RAW(params)

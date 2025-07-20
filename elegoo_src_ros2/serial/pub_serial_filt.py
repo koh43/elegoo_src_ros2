@@ -6,7 +6,7 @@ def main(args=None):
     rclpy.init(args=args)
 
     params = {
-        "node_name": "pub_arduino_serial",
+        "node_name": "pub_serial_filt",
         "queue_size": 5,
     }
     app = pub_serial_filt.PUB_SERIAL_FILT(params)

@@ -27,7 +27,11 @@ setup(
     entry_points={
         'console_scripts': [
             # espcam
-            'pub_cam_raw = elegoo_src_ros2.espcam.pub_cam_raw:main',
+            'pub_cam_raw      = elegoo_src_ros2.espcam.pub_cam_raw:main',
+            'pub_cam_raw_info = elegoo_src_ros2.espcam.pub_cam_raw_info:main',
+            'pub_cam_rect     = elegoo_src_ros2.espcam.pub_cam_rect:main',
+            'pub_cam_vo       = elegoo_src_ros2.espcam.pub_cam_vo:main',
+            'cap_calib_imgs   = elegoo_src_ros2.espcam.cap_calib_imgs:main',
             # arduino serial
             'pub_serial_raw  = elegoo_src_ros2.serial.pub_serial_raw:main',
             'pub_serial_filt = elegoo_src_ros2.serial.pub_serial_filt:main',

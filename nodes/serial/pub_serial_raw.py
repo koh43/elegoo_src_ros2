@@ -36,7 +36,7 @@ class PUB_SERIAL_RAW(Node):
         self.sock.bind(("0.0.0.0", params['udp_port']))
         self.buffer_size = params['buffer_size']
         self.load_constants()
-        self.calibrate_offsets(params['num_calib_samples'])
+        self.calc_cov(params['num_calib_samples'])
 
     def load_constants(self):
         self.accel_sensitivity = 16384.0 # 2g
@@ -52,8 +52,8 @@ class PUB_SERIAL_RAW(Node):
         except:
             return None
 
-    def calibrate_offsets(self, num_calib_samples):
-        ros2_utils.loginfo(self, "===== Calibrating IMU Offsets =====")
+    def calc_cov(self, num_calib_samples):
+        ros2_utils.loginfo(self, "===== Calculating IMU Covariance =====")
         ros2_utils.loginfo(self, "Please leave the car stationary in a flat surface...")
         acc_x, acc_y, acc_z = [], [], []
         gyro_x, gyro_y, gyro_z = [], [], []
@@ -65,11 +65,11 @@ class PUB_SERIAL_RAW(Node):
             sensor_data = self.get_data(decoded_data)
             if 'IMU' in sensor_data.keys():
                 i += 1
-                if (i % 100 == 0):
-                    ros2_utils.loginfo(self, f"Calibrating... [{i}/{num_calib_samples}]")
+                if (i % 500 == 0):
+                    ros2_utils.loginfo(self, f"Progress... [{i}/{num_calib_samples}]")
                 acc_x.append((float(sensor_data['IMU'][0])/self.accel_sensitivity)*self.gravity)
                 acc_y.append((float(sensor_data['IMU'][1])/self.accel_sensitivity)*self.gravity)
-                acc_z.append((float(sensor_data['IMU'][2])/self.accel_sensitivity)*self.gravity - self.gravity)
+                acc_z.append((float(sensor_data['IMU'][2])/self.accel_sensitivity)*self.gravity)
                 gyro_x.append(float(sensor_data['IMU'][3])/self.gyro_sensitivity*self.deg2rad)
                 gyro_y.append(float(sensor_data['IMU'][4])/self.gyro_sensitivity*self.deg2rad)
                 gyro_z.append(float(sensor_data['IMU'][5])/self.gyro_sensitivity*self.deg2rad)
@@ -114,31 +114,31 @@ class PUB_SERIAL_RAW(Node):
             msg = Imu()
             msg.header.frame_id = "my_src"
             msg.header.stamp = ros2_utils.now(self)
-            msg.linear_acceleration.x = (float(sensor_data['IMU'][0])/self.accel_sensitivity)*self.gravity - self.acc_offset[0]
-            msg.linear_acceleration.y = (float(sensor_data['IMU'][1])/self.accel_sensitivity)*self.gravity - self.acc_offset[1]
-            msg.linear_acceleration.z = (float(sensor_data['IMU'][2])/self.accel_sensitivity)*self.gravity - self.acc_offset[2]
+            msg.linear_acceleration.x = (float(sensor_data['IMU'][0])/self.accel_sensitivity)*self.gravity
+            msg.linear_acceleration.y = (float(sensor_data['IMU'][1])/self.accel_sensitivity)*self.gravity
+            msg.linear_acceleration.z = (float(sensor_data['IMU'][2])/self.accel_sensitivity)*self.gravity - self.gravity
             msg.linear_acceleration_covariance = self.acc_cov
-            msg.angular_velocity.x = float(sensor_data['IMU'][3])/self.gyro_sensitivity*self.deg2rad - self.gyro_offset[0]
-            msg.angular_velocity.y = float(sensor_data['IMU'][4])/self.gyro_sensitivity*self.deg2rad - self.gyro_offset[1]
-            msg.angular_velocity.z = float(sensor_data['IMU'][5])/self.gyro_sensitivity*self.deg2rad - self.gyro_offset[2]
+            msg.angular_velocity.x = float(sensor_data['IMU'][3])/self.gyro_sensitivity*self.deg2rad
+            msg.angular_velocity.y = float(sensor_data['IMU'][4])/self.gyro_sensitivity*self.deg2rad
+            msg.angular_velocity.z = float(sensor_data['IMU'][5])/self.gyro_sensitivity*self.deg2rad
             msg.angular_velocity_covariance = self.gyro_cov
             self.pub_imu.publish(msg)
-        if 'us_dist' in sensor_data.keys():
+        if 'US' in sensor_data.keys():
             msg = Ultrasonic()
             msg.stamp = ros2_utils.now(self)
-            msg.data = float(sensor_data['us_dist'][0])
+            msg.data = float(sensor_data['US'][0])
             self.pub_ultrasonic.publish(msg)
-        if 'voltage' in sensor_data.keys():
+        if 'V' in sensor_data.keys():
             msg = Voltage()
             msg.stamp = ros2_utils.now(self)
-            msg.data = float(sensor_data['voltage'][0])
+            msg.data = float(sensor_data['V'][0])
             self.pub_voltage.publish(msg)
-        if 'line_tracker' in sensor_data.keys():
+        if 'LT' in sensor_data.keys():
             msg = LineTracker()
             msg.stamp = ros2_utils.now(self)
-            msg.l = float(sensor_data['line_tracker'][0])
-            msg.m = float(sensor_data['line_tracker'][1])
-            msg.r = float(sensor_data['line_tracker'][2])
+            msg.l = float(sensor_data['LT'][0])
+            msg.m = float(sensor_data['LT'][1])
+            msg.r = float(sensor_data['LT'][2])
             self.pub_line_tracker.publish(msg)
         
         # ros2_utils.loginfo(self, f"elapsed_time: {time.time() - start}")

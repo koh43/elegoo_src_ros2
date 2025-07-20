@@ -4,14 +4,14 @@ from sensor_msgs.msg import CompressedImage
 from cv_bridge import CvBridge
 from utils import esp_cam_utils, ros2_utils
 
-class PUB_ESPCAM_RAW(Node):
+class PUB_CAM_RAW(Node):
     def __init__(self, params):
         super().__init__(params["node_name"])
         self.frame_id = params["frame_id"]
         qos_profile = ros2_utils.custom_qos_profile(params["queue_size"])
         self.br = CvBridge()
         self.pub_img_color = self.create_publisher(
-            CompressedImage, 'image_color', qos_profile
+            CompressedImage, 'raw/image_color', qos_profile
         )
         self.camera = esp_cam_utils.init_camera(params)
         self.timer = self.create_timer(1/params['fps'], self.callback)

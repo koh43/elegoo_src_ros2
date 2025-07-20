@@ -25,7 +25,7 @@ def publisher(node, msg_type, topic, qos=10):
         msg_type, topic, qos
     )
 
-def subsciber(node, msg_type, topic, callback, qos=10):
+def subscriber(node, msg_type, topic, callback, qos=10):
     return node.create_subscription(
         msg_type,
         topic,

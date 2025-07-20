@@ -1,16 +1,15 @@
 import rclpy
 
-from nodes.misc import image_view
+from nodes.espcam import pub_cam_rect
 
 def main(args=None):
     rclpy.init(args=args)
 
     params = {
-        "topic_name": "/espcam/raw/image_color",
-        "img_type"  : "compressed"
+        'node_name'  : 'pub_espcam_rect',
+        'queue_size' : 5,
     }
-
-    app = image_view.IMAGE_VIEW(params)
+    app = pub_cam_rect.PUB_CAM_RECT(params)
 
     rclpy.spin(app)
     app.destroy_node()

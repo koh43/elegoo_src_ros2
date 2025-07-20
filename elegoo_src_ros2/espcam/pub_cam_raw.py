@@ -13,7 +13,7 @@ def main(args=None):
         'frame_id'   : 'espcam',
         'fps'        : 30,
     }
-    app = pub_cam_raw.PUB_ESPCAM_RAW(params)
+    app = pub_cam_raw.PUB_CAM_RAW(params)
 
     rclpy.spin(app)
     app.destroy_node()
