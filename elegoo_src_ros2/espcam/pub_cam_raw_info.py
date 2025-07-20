@@ -13,12 +13,7 @@ def main(args=None):
         'frame_id'   : 'espcam',
         'fps'        : 30,
         'calib_type' : 'matlab',
-        'calib_path' : os.path.join(
-            os.path.expanduser('~'),
-            'espcam_calib',
-            'espcam_calib_params.mat'
-        )
-        
+        'calib_path' : './espcam_calib_params.mat'
     }
     app = pub_cam_raw_info.PUB_CAM_RAW_INFO(params)
 
